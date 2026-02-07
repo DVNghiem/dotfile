@@ -51,7 +51,6 @@ fi
 # Install essential build tools and dependencies
 print_info "Installing essential build tools..."
 if command_exists dnf; then
-    sudo dnf groupinstall -y "Development Tools"
     sudo dnf install -y \
         curl \
         wget \
@@ -229,11 +228,11 @@ if [ -f "$SCRIPT_DIR/nvim/install.sh" ]; then
     bash "$SCRIPT_DIR/nvim/install.sh"
 else
     if ! command_exists nvim; then
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+        curl -LO https://github.com/neovim/neovim/releases/download/v0.11.6/nvim-linux-x86_64.tar.gz 
         sudo rm -rf /opt/nvim
-        sudo tar -C /opt -xzf nvim-linux64.tar.gz
+        sudo tar -C /opt -xzf  nvim-linux-x86_64.tar.gz 
         sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim
-        rm nvim-linux64.tar.gz
+        rm nvim-linux-x86_64.tar.gz 
     fi
     
     # Install Neovim config
