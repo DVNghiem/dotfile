@@ -221,21 +221,6 @@ if ! command_exists lazydocker; then
     curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 fi
 
-# gh (GitHub CLI)
-if ! command_exists gh; then
-    if command_exists dnf; then
-        sudo dnf install -y 'dnf-command(config-manager)'
-        sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-        sudo dnf install -y gh
-    elif command_exists apt-get; then
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-        sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-        sudo apt-get update
-        sudo apt-get install -y gh
-    fi
-fi
-
 # fzf (fuzzy finder)
 if ! command_exists fzf; then
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
@@ -291,12 +276,10 @@ command_exists node && echo "Node.js: $(node --version)"
 command_exists npm && echo "npm: $(npm --version)"
 command_exists python3 && echo "Python: $(python3 --version)"
 command_exists pip3 && echo "pip: $(pip3 --version)"
-command_exists go && echo "Go: $(go version)"
 command_exists rustc && echo "Rust: $(rustc --version)"
 command_exists cargo && echo "Cargo: $(cargo --version)"
 [ -d "$HOME/.sdkman" ] && source "$HOME/.sdkman/bin/sdkman-init.sh" && command_exists java && echo "Java: $(java -version 2>&1 | head -n 1)"
 command_exists nvim && echo "Neovim: $(nvim --version | head -n 1)"
-command_exists gh && echo "GitHub CLI: $(gh --version | head -n 1)"
 command_exists lazygit && echo "lazygit: $(lazygit --version)"
 
 echo ""
