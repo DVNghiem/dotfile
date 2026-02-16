@@ -37,21 +37,11 @@ print_info "Script directory: $SCRIPT_DIR"
 
 # Update system packages
 print_info "Updating system packages..."
-if command_exists dnf; then
-    sudo dnf update -y
-elif command_exists apt-get; then
-    sudo apt-get update
-    sudo apt-get upgrade -y
-elif command_exists yum; then
-    sudo yum update -y
-elif command_exists pacman; then
-    sudo pacman -Syu --noconfirm
-fi
+sudo dnf update -y
 
 # Install essential build tools and dependencies
 print_info "Installing essential build tools..."
-if command_exists dnf; then
-    sudo dnf install -y \
+sudo dnf install -y \
         curl \
         wget \
         git \
@@ -83,37 +73,6 @@ if command_exists dnf; then
         bzip2-devel \
         sqlite-devel \
         libffi-devel
-elif command_exists apt-get; then
-    sudo apt-get install -y \
-        build-essential \
-        curl \
-        wget \
-        git \
-        unzip \
-        zip \
-        tar \
-        software-properties-common \
-        apt-transport-https \
-        ca-certificates \
-        gnupg \
-        lsb-release \
-        tree \
-        htop \
-        tmux \
-        jq \
-        ripgrep \
-        fd-find \
-        bat \
-        net-tools \
-        openssl \
-        libssl-dev \
-        pkg-config
-elif command_exists yum; then
-    sudo yum groupinstall -y "Development Tools"
-    sudo yum install -y curl wget git unzip zip tar tree htop tmux jq ripgrep fd-find bat
-elif command_exists pacman; then
-    sudo pacman -S --noconfirm base-devel curl wget git unzip zip tar tree htop tmux jq ripgrep fd bat
-fi
 
 # Install ZSH and configure shell
 print_info "Installing ZSH..."
@@ -174,15 +133,8 @@ fi
 
 # Install Python and pip
 print_info "Installing Python development tools..."
-if command_exists dnf; then
-    sudo dnf install -y python3 python3-pip python3-devel python3-virtualenv
-elif command_exists apt-get; then
-    sudo apt-get install -y python3 python3-pip python3-venv python3-dev
-elif command_exists yum; then
-    sudo yum install -y python3 python3-pip python3-devel
-elif command_exists pacman; then
-    sudo pacman -S --noconfirm python python-pip
-fi
+sudo dnf install -y python3 python3-pip python3-devel python3-virtualenv
+
 # Install Docker
 print_info "Installing Docker..."
 if [ -f "$SCRIPT_DIR/docker/install.sh" ]; then
@@ -229,8 +181,8 @@ if [ -f "$SCRIPT_DIR/nvim/install.sh" ]; then
 else
     if ! command_exists nvim; then
         curl -LO https://github.com/neovim/neovim/releases/download/v0.11.6/nvim-linux-x86_64.tar.gz 
-        sudo rm -rf /opt/nvim
-        sudo tar -C /opt -xzf  nvim-linux-x86_64.tar.gz 
+        sudo rm -rf /opt/nvim-linux64
+        sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz 
         sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim
         rm nvim-linux-x86_64.tar.gz 
     fi
@@ -260,11 +212,8 @@ print_info "Installing additional developer tools..."
 
 # lazygit (TUI for git)
 if ! command_exists lazygit; then
-    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-    tar xf lazygit.tar.gz lazygit
-    sudo install lazygit /usr/local/bin
-    rm lazygit lazygit.tar.gz
+    sudo dnf copr enable dejan/lazygit
+    sudo dnf install lazygit
 fi
 
 # lazydocker (TUI for docker)
